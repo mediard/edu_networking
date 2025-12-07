@@ -1,0 +1,17 @@
+# Minimal example tree under /system + /interfaces
+targets:
+  - name: default
+    data:
+      system:
+        hostname: "nm-gnmi-target"
+      interfaces:
+        interface:
+          - name: "eth0"
+            state:
+              admin-status: "UP"
+              oper-status: "UP"
+          - name: "eth1"
+            state:
+              admin-status: "DOWN"
+              oper-status: "DOWN"
+

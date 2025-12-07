@@ -1,0 +1,47 @@
+services:
+
+  # -------------------------------------------------------
+  # NETCONF: Netopeer2 + Sysrepo
+  # -------------------------------------------------------
+  netconf:
+    image: sysrepo/sysrepo-netopeer2:latest
+    container_name: nm-netconf
+    ports:
+      - "830:830"
+
+  # -------------------------------------------------------
+  # gNMI: faucet/gnmi test server (Docker Hub)
+  # -------------------------------------------------------
+  gnmi:
+    image: faucet/gnmi:latest
+    container_name: nm-gnmi
+    ports:
+      - "9339:9339"
+
+  # -------------------------------------------------------
+  # SNMP Simulator: tandrup/snmpsim (Docker Hub)
+  # -------------------------------------------------------
+  snmp:
+    image: tandrup/snmpsim:latest
+    container_name: nm-snmp
+#    volumes:
+#      - ./data/snmpsim:/var/lib/snmpsim/data:ro
+    ports:
+      - "161:161/udp"
+
+  # -------------------------------------------------------
+  # TOOLS BOX (clients: gnmic, ncclient, snmpwalk, etc.)
+  # -------------------------------------------------------
+  tools:
+    image: alpine:3.20
+    container_name: nm-tools
+    tty: true
+    stdin_open: true
+    working_dir: /work
+    depends_on:
+      - netconf
+      - gnmi
+      - snmp
+    volumes:
+      - ./:/work
+    command: ["/bin/sh", "-l"]
